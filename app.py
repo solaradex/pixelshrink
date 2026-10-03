@@ -280,7 +280,7 @@ def home():
 
     if request.method == "POST":
         files = request.files.getlist("images")
-        quality = request.form.get("quality", 80, type=int)
+        quality = max(1, min(100, request.form.get("quality", 80, type=int)))
         files = [f for f in files if f and f.filename]
 
         if files:
