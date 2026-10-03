@@ -1,3 +1,5 @@
+import tempfile
+import os
 from flask import Flask, request, render_template_string, send_file
 from processor import optimize_image
 from PIL import Image
@@ -232,7 +234,7 @@ q>=40?'Smaller files, noticeable quality trade-offs':
 <div class="stat"><span>Space saved</span><strong class="green">{{ result.savings }}%</strong></div>
 <div class="stat"><span>Files processed</span><strong>{{ result.count }}</strong></div>
 </div>
-<a class="download" href="/download">↓ Download optimized ZIP</a>
+<a class="download" href="{{ url_for('download', download_id=result.download_id) }}">↓ Download optimized ZIP</a>
 <h3>Individual image results</h3>
 <div class="table-wrap">
 <table>
@@ -257,11 +259,11 @@ q>=40?'Smaller files, noticeable quality trade-offs':
 </html>
 """
 
-optimized_zip = None
+DOWNLOAD_DIR = Path(tempfile.gettempdir()) / "pixelshrink-downloads"
+DOWNLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 @app.route("/", methods=["GET", "POST"])
 def home():
-    global optimized_zip
     result = None
 
     if request.method == "POST":
@@ -285,7 +287,6 @@ def home():
 
                         image = Image.open(io.BytesIO(data))
                         image.verify()
-
                         optimized, stats = optimize_image(io.BytesIO(data), quality)
 
                         filename = secure_filename(file.filename.rsplit(".", 1)[0])
@@ -304,13 +305,17 @@ def home():
                 if processed == 0:
                     return "No valid images were uploaded.", 400
 
-                optimized_zip = zip_buffer.getvalue()
+                download_id = os.urandom(16).hex()
+                zip_path = DOWNLOAD_DIR / f"{download_id}.zip"
+                zip_path.write_bytes(zip_buffer.getvalue())
+
                 result = {
                     "count": processed,
                     "images": image_results,
                     "original": round(original_total / 1024, 2),
                     "optimized": round(optimized_total / 1024, 2),
-                    "savings": round((1 - optimized_total / original_total) * 100, 2)
+                    "savings": round((1 - optimized_total / original_total) * 100, 2),
+                    "download_id": download_id
                 }
             except Exception as e:
                 app.logger.exception("Bulk image processing failed")
@@ -318,17 +323,30 @@ def home():
 
     return render_template_string(HTML, result=result)
 
-@app.route("/download")
-def download():
-    if optimized_zip is None:
-        return "No optimized ZIP available.", 404
+@app.route("/download/<download_id>")
+def download(download_id):
+    if not download_id.isalnum() or len(download_id) != 32:
+        return "Download not found or expired.", 404
 
-    return send_file(
-        io.BytesIO(optimized_zip),
+    zip_path = DOWNLOAD_DIR / f"{download_id}.zip"
+    if not zip_path.is_file():
+        return "Download not found or expired.", 404
+
+    response = send_file(
+        zip_path,
         mimetype="application/zip",
         as_attachment=True,
         download_name="pixelshrink-images.zip"
     )
+
+    @response.call_on_close
+    def remove_download():
+        try:
+            zip_path.unlink(missing_ok=True)
+        except OSError:
+            app.logger.warning("Could not remove temporary ZIP: %s", zip_path)
+
+    return response
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=False)
