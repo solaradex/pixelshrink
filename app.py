@@ -1,3 +1,4 @@
+import time
 import tempfile
 import os
 from flask import Flask, request, render_template_string, send_file
@@ -262,8 +263,19 @@ q>=40?'Smaller files, noticeable quality trade-offs':
 DOWNLOAD_DIR = Path(tempfile.gettempdir()) / "pixelshrink-downloads"
 DOWNLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
+def cleanup_old_downloads():
+    now = time.time()
+    for path in DOWNLOAD_DIR.glob("*.zip"):
+        try:
+            if now - path.stat().st_mtime > 3600:
+                path.unlink(missing_ok=True)
+        except OSError:
+            app.logger.warning("Could not clean up temporary ZIP: %s", path)
+
+
 @app.route("/", methods=["GET", "POST"])
 def home():
+    cleanup_old_downloads()
     result = None
 
     if request.method == "POST":
