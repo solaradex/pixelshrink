@@ -290,6 +290,7 @@ def home():
                 optimized_total = 0
                 processed = 0
                 image_results = []
+                used_filenames = set()
 
                 with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as archive:
                     for file in files:
@@ -302,7 +303,14 @@ def home():
                         optimized, stats = optimize_image(io.BytesIO(data), quality)
 
                         filename = secure_filename(file.filename.rsplit(".", 1)[0])
-                        archive.writestr(f"{filename or 'image'}.webp", optimized)
+                        base = filename or "image"
+                        unique_name = f"{base}.webp"
+                        counter = 2
+                        while unique_name in used_filenames:
+                            unique_name = f"{base}_{counter}.webp"
+                            counter += 1
+                        used_filenames.add(unique_name)
+                        archive.writestr(unique_name, optimized)
 
                         original_total += stats["original"]
                         optimized_total += stats["optimized"]
