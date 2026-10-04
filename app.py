@@ -225,6 +225,11 @@ q>=40?'Smaller files, noticeable quality trade-offs':
 <button type="submit">✦ Optimize images</button>
 </div>
 </form>
+{% if error %}
+<div class="result">
+<p>{{ error }}</p>
+</div>
+{% endif %}
 {% if result %}
 <div class="result">
 <h2>Optimization complete ✨</h2>
@@ -282,6 +287,9 @@ def home():
         files = request.files.getlist("images")
         quality = max(1, min(100, request.form.get("quality", 80, type=int)))
         files = [f for f in files if f and f.filename]
+
+        if len(files) > 10:
+            return render_template_string(HTML, error="You can upload a maximum of 10 images per batch."), 400
 
         if files:
             try:
