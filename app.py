@@ -206,8 +206,9 @@ footer { text-align:center; color:#77758d; font-size:12px; margin-top:55px; }
 <strong>Choose images to optimize</strong>
 <small>Select multiple JPG, PNG, or WebP files</small>
 <br><br>
-<input type="file" name="images" accept="image/*" multiple required>
+<input type="file" id="images" name="images" accept="image/*" multiple required>
 </label>
+<p id="upload-error" role="alert" style="display:none;color:#f87171;font-size:14px;margin:10px 0"></p>
 <div class="controls">
 <label class="quality" for="quality">
   <span>Compression quality</span>
@@ -261,6 +262,25 @@ q>=40?'Smaller files, noticeable quality trade-offs':
 </section>
 <footer>PixelShrink · A simpler way to optimize images</footer>
 </div>
+<script>
+const form = document.querySelector('form');
+const imageInput = document.getElementById('images');
+const uploadError = document.getElementById('upload-error');
+
+function validateImageCount() {
+    const tooMany = imageInput.files.length > 10;
+    uploadError.textContent = tooMany ? 'You can upload a maximum of 10 images per batch.' : '';
+    uploadError.style.display = tooMany ? 'block' : 'none';
+    return !tooMany;
+}
+
+imageInput.addEventListener('change', validateImageCount);
+form.addEventListener('submit', function(event) {
+    if (!validateImageCount()) {
+        event.preventDefault();
+    }
+});
+</script>
 </body>
 </html>
 """
