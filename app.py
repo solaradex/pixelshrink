@@ -184,8 +184,8 @@ footer { text-align:center; color:#77758d; font-size:12px; margin-top:55px; }
 
 <section class="hero">
 <div class="eyebrow">Less weight. More speed.</div>
-<h1>Beautiful images.<br><span class="gradient">Smaller files.</span></h1>
-<p class="subtitle">Optimize entire batches of images in seconds. Keep the quality. Lose the unnecessary file size.</p>
+<h1>Faster websites.<br><span class="gradient">Smaller images.</span></h1>
+<p class="subtitle">Optimize batches of website images in seconds. Reduce file sizes, speed up your workflow, and keep image quality under control.</p>
 <div class="visual">
 <div class="visual-top"><span>BEFORE</span><span>AFTER</span></div>
 <div class="preview">
@@ -256,9 +256,9 @@ q>=40?'Smaller files, noticeable quality trade-offs':
 </section>
 
 <section class="features">
-<div class="feature"><div class="feature-icon">✧</div><h3>Smart compression</h3><p>Reduce image file sizes while keeping control over quality.</p></div>
-<div class="feature"><div class="feature-icon">▦</div><h3>Bulk processing</h3><p>Optimize multiple images together instead of one at a time.</p></div>
-<div class="feature"><div class="feature-icon">⇩</div><h3>Easy downloads</h3><p>Get your optimized WebP images packaged in one ZIP.</p></div>
+<div class="feature"><div class="feature-icon">✧</div><h3>Faster websites</h3><p>Reduce image file sizes so your pages load faster without sacrificing control over quality.</p></div>
+<div class="feature"><div class="feature-icon">▦</div><h3>Bulk workflow</h3><p>Optimize batches of website images at once instead of processing them one by one.</p></div>
+<div class="feature"><div class="feature-icon">⇩</div><h3>Web-ready output</h3><p>Download your optimized WebP images together in one convenient ZIP.</p></div>
 </section>
 <footer>PixelShrink · A simpler way to optimize images</footer>
 </div>
