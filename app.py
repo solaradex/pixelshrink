@@ -260,6 +260,14 @@ q>=40?'Smaller files, noticeable quality trade-offs':
 <div class="feature"><div class="feature-icon">▦</div><h3>Bulk workflow</h3><p>Optimize batches of website images at once instead of processing them one by one.</p></div>
 <div class="feature"><div class="feature-icon">⇩</div><h3>Web-ready output</h3><p>Download your optimized WebP images together in one convenient ZIP.</p></div>
 </section>
+
+<section style="margin-top:24px;padding:32px 24px;text-align:center;border:1px solid rgba(167,139,250,.25);border-radius:24px;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(168,85,247,.08));">
+<div class="eyebrow">COMING SOON</div>
+<h2 style="margin:8px 0 10px;">Need more than 10 images?</h2>
+<p class="subtitle" style="font-size:15px;max-width:620px;margin:0 auto 22px;">PixelShrink Pro is being built for website owners, developers, freelancers, and agencies who optimize images regularly.</p>
+<a href="https://tally.so/r/xXegy5" target="_blank" rel="noopener" style="display:inline-block;padding:14px 24px;border-radius:14px;background:linear-gradient(135deg,#8b5cf6,#a855f7);color:white;text-decoration:none;font-weight:700;">Join Pro Early Access →</a>
+</section>
+
 <footer>PixelShrink · A simpler way to optimize images</footer>
 </div>
 <script>
